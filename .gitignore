@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+*.har
+*.log
+node_modules/
+
+# Local captures / vendor bundles (large, may contain session data)
+main.*.js
