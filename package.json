@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "generate-updates-xml": "node scripts/generate-updates-xml.mjs",
+    "pack": "node scripts/pack-extension.mjs"
+  },
+  "devDependencies": {
+    "crx": "^5.0.1"
+  }
+}

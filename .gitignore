@@ -3,6 +3,10 @@ Thumbs.db
 *.har
 *.log
 node_modules/
+.env
+*.pem
+# Local Chrome pack output (CI publishes TextFree-Mark-Unread.crx)
+extension.crx
 
 # Local captures / vendor bundles (large, may contain session data)
 main.*.js

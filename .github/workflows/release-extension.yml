@@ -1,0 +1,64 @@
+name: Release extension
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "extension/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/release-extension.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-extension-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install and pack
+        env:
+          CRX_PRIVATE_KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+          CRX_PRIVATE_KEY_B64: ${{ secrets.CRX_PRIVATE_KEY_B64 }}
+          EXTENSION_ID: kokcmkomlkjlolnoklgikcmkehdjedim
+          CRX_FILENAME: TextFree-Mark-Unread.crx
+          UPDATE_BRANCH: main
+        run: |
+          set -e
+          if [ -n "${CRX_PRIVATE_KEY_B64:-}" ]; then
+            echo "$CRX_PRIVATE_KEY_B64" | base64 -d > "$RUNNER_TEMP/key.pem"
+          elif [ -n "${CRX_PRIVATE_KEY:-}" ]; then
+            printf '%s\n' "$CRX_PRIVATE_KEY" > "$RUNNER_TEMP/key.pem"
+          else
+            echo "Add repository secret CRX_PRIVATE_KEY_B64 or CRX_PRIVATE_KEY (PEM)." >&2
+            exit 1
+          fi
+          export CRX_PRIVATE_KEY_PATH="$RUNNER_TEMP/key.pem"
+          npm ci
+          npm run generate-updates-xml
+          npm run pack
+
+      - name: Commit artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add updates.xml TextFree-Mark-Unread.crx
+          if git diff --staged --quiet; then
+            echo "No changes to updates.xml or CRX."
+          else
+            git commit -m "chore: release TextFree-Mark-Unread.crx and updates.xml"
+            git push
+          fi
