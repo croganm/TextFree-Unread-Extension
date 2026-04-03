@@ -70,6 +70,47 @@ ion-item-sliding.textfree-local-unread .row:first-child .contact::before {
   background: rgba(0, 0, 0, 0.2);
 }
 
+/* Light icon + surface on dark UI (OS dark mode or Ionic palette) */
+@media (prefers-color-scheme: dark) {
+  .textfree-copy-btn {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .textfree-copy-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .textfree-copy-btn:active {
+    background: rgba(255, 255, 255, 0.26);
+  }
+
+  .textfree-copy-conversation-inline .textfree-copy-conversation-btn {
+    color: var(--ion-color-primary-tint, #b4b0ff);
+  }
+}
+
+html.ion-palette-dark .textfree-copy-btn,
+html.dark .textfree-copy-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+html.ion-palette-dark .textfree-copy-btn:hover,
+html.dark .textfree-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+html.ion-palette-dark .textfree-copy-btn:active,
+html.dark .textfree-copy-btn:active {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+html.ion-palette-dark .textfree-copy-conversation-inline .textfree-copy-conversation-btn,
+html.dark .textfree-copy-conversation-inline .textfree-copy-conversation-btn {
+  color: var(--ion-color-primary-tint, #b4b0ff);
+}
+
 .textfree-copy-btn--header {
   margin-left: 0;
 }
